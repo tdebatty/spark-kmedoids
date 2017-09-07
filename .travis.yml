@@ -3,7 +3,7 @@ install: cd spark-kmedoids && mvn --quiet install -DskipTests=true -Dmaven.javad
 script: mvn clean install -Dmaven.javadoc.skip=true -Dgpg.skip=true -DargLine="-Xmx2G"
 
 after_success:
-  - mvn clean test jacoco:report coveralls:report -DargLine="-Xmx2G"
+  - cd spark-kmedoids && mvn clean test jacoco:report coveralls:report -DargLine="-Xmx2G"
 
 #env:
 #  - SPARKVERSION="1.5.2"
