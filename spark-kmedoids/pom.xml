@@ -118,24 +118,17 @@
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <formats>
-                        <format>html</format>
-                        <format>xml</format>
-                    </formats>
-                    <maxmem>256m</maxmem>
-                    <!-- aggregated reports for multi-module projects -->
-                    <!-- <aggregate>true</aggregate> -->
-
-                    <instrumentation>
-                        <excludes>
-                            <!-- <exclude>info/debatty/java/stringsimilarity/examples/**/*.class</exclude> -->
-                        </excludes>
-                    </instrumentation>
-                </configuration>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.9</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Ensure we use no "snapshot" dependency -->
@@ -174,7 +167,7 @@
                             <failOnWarning>true</failOnWarning>
                             <ignoreNonCompile>true</ignoreNonCompile>
                             <ignoredDependencies>
-                                <!-- <ignoreDependency>javax.portlet:portlet-api:*</ignoreDependency> -->
+                                <ignoreDependency>net.sourceforge.cobertura:cobertura:*</ignoreDependency>
                             </ignoredDependencies>
                         </configuration>
                         <goals>
