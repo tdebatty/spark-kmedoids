@@ -19,6 +19,33 @@
         </license>
     </licenses>
 
+        <developers>
+        <developer>
+            <name>Thibault Debatty</name>
+            <email>thibault.debatty@gmail.com</email>
+            <organization>debatty.info</organization>
+            <organizationUrl>http://debatty.info</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:tdebatty/spark-kmedoids.git</connection>
+        <developerConnection>scm:git:git@github.com:tdebatty/spark-kmedoids.git</developerConnection>
+        <url>git@github.com:tdebatty/spark-kmedoids.git</url>
+        <tag>v0.1</tag>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
