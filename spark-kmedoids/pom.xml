@@ -6,6 +6,10 @@
     <version>0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <name>${project.artifactId}</name>
+    <url>https://github.com/tdebatty/spark-kmedoids</url>
+    <description>Spark implementation of various k-medoids clustering algorithms.</description>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
