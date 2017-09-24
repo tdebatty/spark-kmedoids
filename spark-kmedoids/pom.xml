@@ -207,6 +207,20 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>info.debatty</groupId>
+                <artifactId>sparkpackages-maven-plugin</artifactId>
+                <version>0.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>zip</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
