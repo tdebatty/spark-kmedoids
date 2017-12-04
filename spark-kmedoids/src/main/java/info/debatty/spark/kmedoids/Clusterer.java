@@ -81,7 +81,7 @@ public class Clusterer<T> {
      */
     public final void setNeighborGenerator(
             final NeighborGenerotor<T> neighbor_generator) {
-        logger.info(
+        logger.debug(
                 "Using neighbor generator {}",
                 neighbor_generator.getClass().getName());
         this.neighbor_generator = neighbor_generator;
@@ -126,7 +126,7 @@ public class Clusterer<T> {
 
         // Keep track of best solution
         Solution<T> solution = new Solution<>(data.count());
-        logger.info("Dataset contains {} objects", solution.getDatasetSize());
+        logger.debug("Dataset contains {} objects", solution.getDatasetSize());
 
         neighbor_generator.init(k);
         points_supplier = new RandomPointsSupplier<>(
@@ -138,7 +138,7 @@ public class Clusterer<T> {
         solution.incComputedSimilarities(k * solution.getDatasetSize());
 
         while (true) {
-            logger.debug("Trial {}", solution.getTrials());
+            logger.trace("Trial {}", solution.getTrials());
 
             // Select neighbor solution
             CountingSimilarity<T> counting_sim =
@@ -177,7 +177,7 @@ public class Clusterer<T> {
         }
 
         solution.end();
-        logger.info("Found solution {}", solution);
+        logger.debug("Found solution {}", solution);
         return solution;
 
     }
