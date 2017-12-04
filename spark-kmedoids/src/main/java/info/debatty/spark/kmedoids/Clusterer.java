@@ -358,7 +358,7 @@ class RandomPointsSupplier<T> {
     }
 
     private void fill() {
-        logger.info("Fetching new points...");
+        logger.debug("Fetching new points...");
         double sampling = 1.0 * STOCK_SIZE / n;
         sampling = Math.min(sampling, 1.0);
 
