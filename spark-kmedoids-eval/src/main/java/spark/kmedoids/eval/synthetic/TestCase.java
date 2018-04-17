@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 tibo.
+ * Copyright 2017 Thibault Debatty.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 
 /**
  *
- * @author tibo
+ * @author Thibault Debatty
  */
 public class TestCase {
 
