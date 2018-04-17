@@ -24,14 +24,13 @@
 package spark.kmedoids.eval.sa;
 
 import info.debatty.jinu.Case;
-import info.debatty.jinu.TestFactory;
 import info.debatty.jinu.TestInterface;
 import java.util.Arrays;
 import java.util.List;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import info.debatty.spark.kmedoids.Clusterer;
-import info.debatty.spark.kmedoids.L2Similarity;
+import info.debatty.spark.kmedoids.Similarity;
 import info.debatty.spark.kmedoids.Solution;
 import info.debatty.spark.kmedoids.budget.SimilaritiesBudget;
 import info.debatty.spark.kmedoids.neighborgenerator.SANeighborGenerator;
@@ -44,25 +43,26 @@ import org.apache.spark.api.java.JavaSparkContext;
 /**
  *
  * @author Thibault Debatty
+ * @param <T> Type of data that will be clustered
  */
-public class VaryGamma implements TestInterface {
+public abstract class AbstractVaryGamma<T> {
 
     private static final double T0 = 10000;
 
-    private static String dataset_path;
-    private static long similarities;
+    private final Case test = new Case();
 
     /**
      * @param args the command line arguments
-     * @throws java.lang.Exception if anything goes wrong
+     * @param similarity similarity to use between points
      */
-    public static void main(final String[] args) throws Exception {
+    public AbstractVaryGamma(
+            final String[] args, final Similarity<T> similarity) {
 
         OptionParser parser = new OptionParser("d:s:r:g:");
         OptionSet options = parser.parse(args);
 
-        similarities = Long.valueOf((String) options.valueOf("s"));
-        dataset_path = (String) options.valueOf("d");
+        long similarities = Long.valueOf((String) options.valueOf("s"));
+        String dataset_path = (String) options.valueOf("d");
 
         List<String> gammas_list = (List<String>) options.valuesOf("g");
         double[] gammas = new double[gammas_list.size()];
@@ -70,22 +70,54 @@ public class VaryGamma implements TestInterface {
             gammas[i] = Double.valueOf(gammas_list.get(i));
         }
 
-        // Reduce Spark output logs
+        // Reduce output logs
         Logger.getLogger("org").setLevel(Level.WARN);
         Logger.getLogger("akka").setLevel(Level.WARN);
+        Logger.getLogger("info.debatty.spark.kmedoids").setLevel(Level.WARN);
 
-        Case test = new Case();
-        test.setDescription(VaryGamma.class.getName() + " : "
+        test.setDescription(AbstractVaryGamma.class.getName() + " : "
                 + String.join(" ", Arrays.asList(args)));
         test.setIterations(20);
         test.setParallelism(1);
         test.commitToGit(false);
         test.setBaseDir((String) options.valueOf("r"));
         test.setParamValues(gammas);
+        test.addTest(() -> new VaryGammaTest<>(
+                dataset_path, T0, similarities, similarity));
+    }
 
-        test.addTest(() -> new VaryGamma());
-
+    /**
+     * Run the test.
+     * @throws Exception if something goes wrong
+     */
+    public final void run() throws Exception {
         test.run();
+    }
+}
+
+/**
+ * Actual test.
+ *
+ * @author tibo
+ * @param <T>
+ */
+class VaryGammaTest<T> implements TestInterface {
+
+    private final String dataset_path;
+    private final double t0;
+    private final long similarities;
+    private final Similarity<T> similarity;
+
+    VaryGammaTest(
+            final String dataset_path,
+            final double t0,
+            final long similarities,
+            final Similarity<T> similarity) {
+
+        this.dataset_path = dataset_path;
+        this.t0 = t0;
+        this.similarities = similarities;
+        this.similarity = similarity;
     }
 
     @Override
@@ -94,21 +126,20 @@ public class VaryGamma implements TestInterface {
         SparkConf conf = new SparkConf();
         conf.setAppName("Spark k-medoids clusterer");
         conf.setIfMissing("spark.master", "local[*]");
-        Solution<double[]> solution;
+        Solution<T> solution;
 
         try (JavaSparkContext sc = new JavaSparkContext(conf)) {
-            JavaRDD<double[]> data = sc.objectFile(dataset_path);
+            JavaRDD<T> data = sc.objectFile(dataset_path);
 
-            Clusterer<double[]> clusterer = new Clusterer<>();
+            Clusterer<T> clusterer = new Clusterer<>();
             clusterer.setK(10);
-            clusterer.setSimilarity(new L2Similarity());
+            clusterer.setSimilarity(similarity);
             clusterer.setNeighborGenerator(
-                    new SANeighborGenerator<>(T0, gamma));
+                    new SANeighborGenerator<>(t0, gamma));
             clusterer.setBudget(new SimilaritiesBudget(similarities));
             solution = clusterer.cluster(data);
         }
 
         return new double[]{solution.getTotalSimilarity()};
-
     }
 }
