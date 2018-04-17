@@ -103,7 +103,7 @@ public class VaryT0 implements TestInterface {
             clusterer.setK(10);
             clusterer.setSimilarity(new L2Similarity());
             clusterer.setNeighborGenerator(
-                    new SANeighborGenerator<double[]>(t0, GAMMA));
+                    new SANeighborGenerator<>(t0, GAMMA));
             clusterer.setBudget(new SimilaritiesBudget(similarities));
             solution = clusterer.cluster(data);
         }
