@@ -65,9 +65,9 @@ public class TestCase {
         test.commitToGit(false);
         test.setBaseDir((String) options.valueOf("r"));
         test.setParamValues(similarities);
-        test.addTest(ClaransTest.class);
-        test.addTest(HeuristicTest.class);
-        test.addTest(SimulatedAnnealingTest.class);
+        test.addTest(() -> new ClaransTest());
+        test.addTest(() -> new HeuristicTest());
+        test.addTest(() -> new SimulatedAnnealingTest());
         test.run();
 
     }

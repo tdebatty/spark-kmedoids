@@ -24,6 +24,7 @@
 package spark.kmedoids.eval.sa;
 
 import info.debatty.jinu.Case;
+import info.debatty.jinu.TestFactory;
 import info.debatty.jinu.TestInterface;
 import java.util.Arrays;
 import java.util.List;
@@ -82,7 +83,7 @@ public class VaryGamma implements TestInterface {
         test.setBaseDir((String) options.valueOf("r"));
         test.setParamValues(gammas);
 
-        test.addTest(VaryGamma.class);
+        test.addTest(() -> new VaryGamma());
 
         test.run();
     }

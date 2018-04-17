@@ -82,7 +82,7 @@ public class VaryT0 implements TestInterface {
         test.setBaseDir((String) options.valueOf("r"));
         test.setParamValues(t0s);
 
-        test.addTest(VaryT0.class);
+        test.addTest(() -> new VaryT0());
 
         test.run();
 
