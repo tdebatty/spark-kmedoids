@@ -34,8 +34,8 @@ public class SimulatedAnnealingTest extends AbstractTest {
     /**
      * Return a test instance with a clarans neighbor generator.
      */
-    public SimulatedAnnealingTest() {
-        super(new SANeighborGenerator<double[]>(20000, 0.992));
+    public SimulatedAnnealingTest(double t0, double gamma) {
+        super(new SANeighborGenerator<double[]>(t0, gamma));
     }
 
 }

@@ -43,13 +43,16 @@ public class TestCase {
      */
     public static void main(final String[] args) throws Exception {
 
-        OptionParser parser = new OptionParser("s:r:d:");
+        OptionParser parser = new OptionParser("s:r:d:g:t:");
         OptionSet options = parser.parse(args);
         List<String> similarities_list = (List<String>) options.valuesOf("s");
         double[] similarities = new double[similarities_list.size()];
         for (int i = 0; i < similarities.length; i++) {
             similarities[i] = Double.valueOf(similarities_list.get(i));
         }
+
+        double gamma = Double.valueOf((String) options.valueOf("g"));
+        double t0 = Double.valueOf((String) options.valueOf("t"));
 
         AbstractTest.dataset_path = (String) options.valueOf("d");
 
@@ -67,7 +70,7 @@ public class TestCase {
         test.setParamValues(similarities);
         test.addTest(() -> new ClaransTest());
         test.addTest(() -> new HeuristicTest());
-        test.addTest(() -> new SimulatedAnnealingTest());
+        test.addTest(() -> new SimulatedAnnealingTest(t0, gamma));
         test.run();
 
     }
