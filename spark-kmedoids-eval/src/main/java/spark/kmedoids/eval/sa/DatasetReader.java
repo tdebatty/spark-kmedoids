@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2018 Thibault Debatty.
+ * Copyright 2018 tibo.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,32 +23,14 @@
  */
 package spark.kmedoids.eval.sa;
 
-import info.debatty.java.datasets.tv.Sequence;
-import info.debatty.spark.kmedoids.Similarity;
-import spark.kmedoids.eval.tv.ParseSequenceFunction;
-import spark.kmedoids.eval.tv.SequenceSimilarity;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 
 /**
  *
- * @author Thibault Debatty
+ * @author tibo
  */
-public class TVVaryGamma extends AbstractVaryGamma<Sequence> {
+public interface DatasetReader<T> {
 
-    public TVVaryGamma(
-            final String[] args,
-            final Similarity<Sequence> similarity,
-            final DatasetReader<Sequence> reader) {
-        super(args, similarity, reader);
-    }
-
-    public static void main(final String[] args) throws Exception {
-        TVVaryGamma test = new TVVaryGamma(
-                args,
-                new SequenceSimilarity(),
-                ((sc, dataset_path) -> {
-                    return sc.textFile(dataset_path, 16)
-                            .map(new ParseSequenceFunction());
-                }));
-        test.run();
-    }
+    public JavaRDD<T> readData(JavaSparkContext sc, String dataset_path);
 }

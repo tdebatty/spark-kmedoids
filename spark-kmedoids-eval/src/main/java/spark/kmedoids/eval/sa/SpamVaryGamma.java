@@ -24,6 +24,7 @@
 package spark.kmedoids.eval.sa;
 
 import info.debatty.spark.kmedoids.Similarity;
+import org.apache.spark.api.java.JavaSparkContext;
 import spark.kmedoids.eval.spam.JWSimilarity;
 
 /**
@@ -32,12 +33,19 @@ import spark.kmedoids.eval.spam.JWSimilarity;
  */
 public class SpamVaryGamma extends AbstractVaryGamma<String> {
 
-    public SpamVaryGamma(String[] args, Similarity<String> similarity) {
-        super(args, similarity);
+    public SpamVaryGamma(
+            final String[] args,
+            final Similarity<String> similarity,
+            final DatasetReader<String> reader) {
+        super(args, similarity, reader);
     }
 
     public static void main(final String[] args) throws Exception {
-        SpamVaryGamma test = new SpamVaryGamma(args, new JWSimilarity());
+        SpamVaryGamma test = new SpamVaryGamma(
+                args,
+                new JWSimilarity(),
+                (JavaSparkContext sc, String dataset_path) ->
+                        sc.textFile(dataset_path, 16));
         test.run();
     }
 }

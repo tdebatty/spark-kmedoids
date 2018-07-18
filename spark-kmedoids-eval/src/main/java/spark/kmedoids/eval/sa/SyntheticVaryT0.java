@@ -23,31 +23,28 @@
  */
 package spark.kmedoids.eval.sa;
 
-import info.debatty.java.datasets.tv.Sequence;
+import info.debatty.spark.kmedoids.L2Similarity;
 import info.debatty.spark.kmedoids.Similarity;
-import spark.kmedoids.eval.tv.ParseSequenceFunction;
-import spark.kmedoids.eval.tv.SequenceSimilarity;
 
 /**
  *
  * @author Thibault Debatty
  */
-public class TVVaryGamma extends AbstractVaryGamma<Sequence> {
+public class SyntheticVaryT0 extends AbstractVaryT0<double[]> {
 
-    public TVVaryGamma(
+    public SyntheticVaryT0(
             final String[] args,
-            final Similarity<Sequence> similarity,
-            final DatasetReader<Sequence> reader) {
+            final Similarity<double[]> similarity,
+            final DatasetReader<double[]> reader) {
         super(args, similarity, reader);
     }
 
     public static void main(final String[] args) throws Exception {
-        TVVaryGamma test = new TVVaryGamma(
+        SyntheticVaryT0 test = new SyntheticVaryT0(
                 args,
-                new SequenceSimilarity(),
+                new L2Similarity(),
                 ((sc, dataset_path) -> {
-                    return sc.textFile(dataset_path, 16)
-                            .map(new ParseSequenceFunction());
+                    return sc.objectFile(dataset_path);
                 }));
         test.run();
     }

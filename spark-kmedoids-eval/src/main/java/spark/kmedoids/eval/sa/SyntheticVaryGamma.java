@@ -32,13 +32,20 @@ import info.debatty.spark.kmedoids.Similarity;
  */
 public class SyntheticVaryGamma extends AbstractVaryGamma<double[]> {
 
-    public SyntheticVaryGamma(String[] args, Similarity<double[]> similarity) {
-        super(args, similarity);
+    public SyntheticVaryGamma(
+            final String[] args,
+            final Similarity<double[]> similarity,
+            final DatasetReader<double[]> reader) {
+        super(args, similarity, reader);
     }
 
     public static void main(final String[] args) throws Exception {
         SyntheticVaryGamma test = new SyntheticVaryGamma(
-                args, new L2Similarity());
+                args,
+                new L2Similarity(),
+                ((sc, dataset_path) -> {
+                    return sc.objectFile(dataset_path);
+                }));
         test.run();
     }
 }

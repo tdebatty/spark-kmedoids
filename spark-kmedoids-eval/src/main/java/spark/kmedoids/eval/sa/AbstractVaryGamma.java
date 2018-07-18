@@ -54,9 +54,12 @@ public abstract class AbstractVaryGamma<T> {
     /**
      * @param args the command line arguments
      * @param similarity similarity to use between points
+     * @param reader
      */
     public AbstractVaryGamma(
-            final String[] args, final Similarity<T> similarity) {
+            final String[] args,
+            final Similarity<T> similarity,
+            final DatasetReader<T> reader) {
 
         OptionParser parser = new OptionParser("d:s:r:g:");
         OptionSet options = parser.parse(args);
@@ -73,7 +76,7 @@ public abstract class AbstractVaryGamma<T> {
         // Reduce output logs
         Logger.getLogger("org").setLevel(Level.WARN);
         Logger.getLogger("akka").setLevel(Level.WARN);
-        Logger.getLogger("info.debatty.spark.kmedoids").setLevel(Level.WARN);
+        Logger.getLogger("info.debatty.spark.kmedoids").setLevel(Level.INFO);
 
         test.setDescription(AbstractVaryGamma.class.getName() + " : "
                 + String.join(" ", Arrays.asList(args)));
@@ -83,7 +86,7 @@ public abstract class AbstractVaryGamma<T> {
         test.setBaseDir((String) options.valueOf("r"));
         test.setParamValues(gammas);
         test.addTest(() -> new VaryGammaTest<>(
-                dataset_path, T0, similarities, similarity));
+                dataset_path, T0, similarities, similarity, reader));
     }
 
     /**
@@ -107,17 +110,20 @@ class VaryGammaTest<T> implements TestInterface {
     private final double t0;
     private final long similarities;
     private final Similarity<T> similarity;
+    private final DatasetReader<T> reader;
 
     VaryGammaTest(
             final String dataset_path,
             final double t0,
             final long similarities,
-            final Similarity<T> similarity) {
+            final Similarity<T> similarity,
+            final DatasetReader<T> reader) {
 
         this.dataset_path = dataset_path;
         this.t0 = t0;
         this.similarities = similarities;
         this.similarity = similarity;
+        this.reader = reader;
     }
 
     @Override
@@ -129,7 +135,7 @@ class VaryGammaTest<T> implements TestInterface {
         Solution<T> solution;
 
         try (JavaSparkContext sc = new JavaSparkContext(conf)) {
-            JavaRDD<T> data = sc.objectFile(dataset_path);
+            JavaRDD<T> data = reader.readData(sc, dataset_path);
 
             Clusterer<T> clusterer = new Clusterer<>();
             clusterer.setK(10);

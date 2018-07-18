@@ -32,9 +32,9 @@ import spark.kmedoids.eval.tv.SequenceSimilarity;
  *
  * @author Thibault Debatty
  */
-public class TVVaryGamma extends AbstractVaryGamma<Sequence> {
+public class TVVaryT0 extends AbstractVaryT0<Sequence> {
 
-    public TVVaryGamma(
+    public TVVaryT0(
             final String[] args,
             final Similarity<Sequence> similarity,
             final DatasetReader<Sequence> reader) {
@@ -42,7 +42,7 @@ public class TVVaryGamma extends AbstractVaryGamma<Sequence> {
     }
 
     public static void main(final String[] args) throws Exception {
-        TVVaryGamma test = new TVVaryGamma(
+        TVVaryT0 test = new TVVaryT0(
                 args,
                 new SequenceSimilarity(),
                 ((sc, dataset_path) -> {
